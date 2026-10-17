@@ -1,22 +1,26 @@
 {
-  "passed": 13,
+  "passed": 17,
   "failed": 0,
   "skipped": 0,
   "tests": [
     {
-      "name": "Konfigurasi belum siap: angka tetap —",
+      "name": "Sumber belum siap: angka tetap —, tanpa suara buatan",
       "status": "PASS"
     },
     {
-      "name": "Tidak ada panggilan hasil bertumpuk",
+      "name": "Polling tidak menghasilkan permintaan bertumpuk",
       "status": "PASS"
     },
     {
-      "name": "Grafik hanya persentase; total suara terpisah di kartu",
+      "name": "Grafik hanya menampilkan persen; total suara berada di kartu",
       "status": "PASS"
     },
     {
-      "name": "Kegagalan RPC mempertahankan data dan waktu terakhir",
+      "name": "Batang vertikal memakai skala tetap 0–100% dan tujuh poster asli",
+      "status": "PASS"
+    },
+    {
+      "name": "Kegagalan koneksi mempertahankan hasil, batang, dan waktu terakhir",
       "status": "PASS"
     },
     {
@@ -24,11 +28,19 @@
       "status": "PASS"
     },
     {
-      "name": "Pembaruan lebih lama ditolak",
+      "name": "Pembaruan yang lebih lama ditolak",
       "status": "PASS"
     },
     {
-      "name": "Pergantian profil tidak mengubah urutan grafik",
+      "name": "Pergantian profil tidak mengubah urutan calon pada grafik",
+      "status": "PASS"
+    },
+    {
+      "name": "Poster pada grafik memilih profil calon dan penanda aktif",
+      "status": "PASS"
+    },
+    {
+      "name": "Polling mempertahankan fokus keyboard pada calon",
       "status": "PASS"
     },
     {
@@ -36,23 +48,27 @@
       "status": "PASS"
     },
     {
-      "name": "Slideshow berganti setelah durasi 15 detik",
+      "name": "Slideshow berpindah setelah 15 detik",
       "status": "PASS"
     },
     {
-      "name": "Data lama mendapat status stale",
+      "name": "Data berumur lebih dari 25 detik ditandai stale",
       "status": "PASS"
     },
     {
-      "name": "Sheet kosong menampilkan nol dengan persentase aman",
+      "name": "Hasil 100% tetap berada pada batas skala yang sama",
+      "status": "PASS"
+    },
+    {
+      "name": "Pembacaan sheet kosong menghasilkan nol yang aman",
+      "status": "PASS"
+    },
+    {
+      "name": "Mode produksi memakai label HASIL SEMENTARA",
       "status": "PASS"
     },
     {
       "name": "Timer berhenti saat pagehide dan pulih saat pageshow",
-      "status": "PASS"
-    },
-    {
-      "name": "Google Charts: urutan tetap, label persen, skala 0–100%",
       "status": "PASS"
     }
   ]

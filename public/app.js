@@ -1,19 +1,18 @@
 'use strict';
   const FALLBACK_CANDIDATES = [
-    ['muslimin','01','Muslimin','#507e62'],
-    ['hidayat','02','Muhammad Hidayat Nuryadin','#ba8d3c'],
-    ['abdul-khamid','03','Abdul Khamid','#4d8390'],
-    ['angga','04','Angga Nur Pramahardika','#b16d52'],
-    ['santoso','05','M. Santoso','#8075a5'],
-    ['syaifuddin','06','Syaifuddin Nizar','#7e9149'],
-    ['rizky','07','Rizky','#b86b7b']
+    ['muslimin','01','Muslimin','#ff4c64'],
+    ['hidayat','02','Muhammad Hidayat Nuryadin','#6796ff'],
+    ['abdul-khamid','03','Abdul Khamid','#48d5c6'],
+    ['angga','04','Angga Nur Pramahardika','#ffb25e'],
+    ['santoso','05','M. Santoso','#b595ff'],
+    ['syaifuddin','06','Syaifuddin Nizar','#bddb70'],
+    ['rizky','07','Rizky','#f293bc']
   ].map(function(c){return {id:c[0],number:c[1],name:c[2],color:c[3]};});
   const state = {
     profiles: FALLBACK_CANDIDATES, profilesReady: false, profileIndex: 0,
     results: null, inFlight: false, requestController: null, requestStarted: 0, lastError: '', stopped: false,
-    refreshTimer: null, clockTimer: null, slideshowTimer: null, chartCheckTimer: null,
-    paused: false, slideStarted: Date.now(), pausedElapsed: 0,
-    chartReady: false, chart: null, chartLoading: false, resizeTimer: null
+    refreshTimer: null, clockTimer: null, slideshowTimer: null,
+    paused: false, slideStarted: Date.now(), pausedElapsed: 0, resizeTimer: null
   };
   const $ = function(id){return document.getElementById(id);};
   const numberFormat = new Intl.NumberFormat('id-ID');
@@ -94,50 +93,56 @@
   }
 
   function renderBarChart(){
-    const values = new Map(state.results ? state.results.candidates.map(function(c){return [c.id,c];}) : []);
-    const list=document.createDocumentFragment();
-    state.profiles.forEach(function(c){
-      const result=values.get(c.id);
-      const row=document.createElement('li');row.className='bar-row';row.dataset.candidate=c.id;
-      const name=document.createElement('span');name.className='bar-name';
-      const order=document.createElement('span');order.className='bar-number';order.textContent=c.number;
-      name.append(order,document.createTextNode(c.name));
-      const track=document.createElement('div');track.className='bar-track';track.setAttribute('aria-hidden','true');
-      const fill=document.createElement('div');fill.className='bar-fill';fill.style.backgroundColor=c.color;fill.style.width=result?result.percentage+'%':'0%';track.append(fill);
-      const value=document.createElement('span');value.className='bar-value';
-      value.textContent=result?percentFormat.format(result.percentage)+'%':'—';
-      row.append(name,track,value);list.append(row);
-    });
-    $('bar-list').replaceChildren(list);
-    $('plot').classList.remove('chart-ready');
-    if(!state.chartReady || !state.results || window.innerWidth<=950) return;
-    try {
-      const data = new google.visualization.DataTable();
-      data.addColumn('string','Calon');data.addColumn('number','Persentase');
-      data.addColumn({type:'string',role:'style'});data.addColumn({type:'string',role:'annotation'});
-      state.profiles.forEach(function(c){const r=values.get(c.id);data.addRow([c.number+'  '+c.name,r.percentage/100,c.color,percentFormat.format(r.percentage)+'%']);});
-      if(!state.chart){
-        state.chart=new google.visualization.BarChart($('bar-chart'));
-        google.visualization.events.addListener(state.chart,'ready',function(){if(!state.stopped)$('plot').classList.add('chart-ready');});
-        google.visualization.events.addListener(state.chart,'error',function(){$('plot').classList.remove('chart-ready');});
+    const values=new Map(state.results?state.results.candidates.map(function(c){return [c.id,c];}):[]);
+    const list=$('bar-list');
+    state.profiles.forEach(function(c,index){
+      let row=list.querySelector('[data-candidate="'+c.id+'"]');
+      if(!row){
+        row=document.createElement('li');row.className='bar-row';row.dataset.candidate=c.id;
+        const column=document.createElement('div');column.className='bar-column';
+        const value=document.createElement('span');value.className='bar-value';
+        const track=document.createElement('div');track.className='bar-track';track.setAttribute('aria-hidden','true');
+        const fill=document.createElement('div');fill.className='bar-fill';track.append(fill);column.append(value,track);
+        const button=document.createElement('button');button.type='button';button.className='bar-candidate';
+        button.addEventListener('click',function(){showProfile(index);});
+        const portrait=document.createElement('span');portrait.className='bar-portrait';
+        const placeholder=document.createElement('span');placeholder.className='portrait-placeholder';placeholder.textContent=c.number;
+        portrait.append(placeholder);
+        const identity=document.createElement('span');identity.className='bar-identity';
+        const number=document.createElement('span');number.className='bar-number';number.textContent=c.number;
+        const name=document.createElement('span');name.className='bar-name';identity.append(number,name);
+        button.append(portrait,identity);row.append(column,button);list.append(row);
       }
-      const width=$('plot').clientWidth;
-      state.chart.draw(data,{
-        backgroundColor:'transparent',fontName:'Segoe UI',legend:'none',enableInteractivity:false,
-        height:$('plot').clientHeight,width:width,bar:{groupWidth:'38%'},
-        chartArea:{left:Math.min(295,Math.round(width*.34)),top:12,right:145,bottom:34},
-        hAxis:{minValue:0,maxValue:1,viewWindow:{min:0,max:1},format:'percent',ticks:[0,0.25,0.5,0.75,1],textStyle:{color:'#929b89',fontSize:11},baselineColor:'#e7e9df',gridlines:{color:'#eef0e8'}},
-        vAxis:{textStyle:{color:'#385340',fontSize:width>850?18:14},baselineColor:'transparent',gridlines:{color:'transparent'}},
-        annotations:{alwaysOutside:true,stem:{color:'transparent',length:8},textStyle:{fontSize:width>850?18:14,color:'#385340',auraColor:'none'}},
-        tooltip:{trigger:'none'}
-      });
-    }catch(_){$('plot').classList.remove('chart-ready');}
+      const result=values.get(c.id);
+      const value=row.querySelector('.bar-value');
+      value.textContent=result?percentFormat.format(result.percentage)+'%':'—';
+      value.setAttribute('aria-label',c.name+': '+(result?percentFormat.format(result.percentage)+' persen':'belum tersedia'));
+      const fill=row.querySelector('.bar-fill');fill.hidden=!result;
+      fill.style.backgroundColor=c.color;fill.style.height=result?result.percentage+'%':'0%';
+      row.dataset.state=result?'ready':'waiting';
+      row.querySelector('.bar-name').textContent=c.name;
+      const button=row.querySelector('.bar-candidate');
+      button.setAttribute('aria-label','Lihat profil calon '+c.number+' '+c.name);
+      button.setAttribute('aria-current',String(index===state.profileIndex));
+      if(c.photo && /^\/assets\/candidates\/[-a-z]+\.jpg$/.test(c.photo)){
+        const portrait=row.querySelector('.bar-portrait');
+        let image=portrait.querySelector('img');
+        if(!image){
+          image=document.createElement('img');image.alt='';image.loading='lazy';
+          image.onload=function(){this.hidden=false;portrait.querySelector('.portrait-placeholder').hidden=true;};
+          image.onerror=function(){this.hidden=true;portrait.querySelector('.portrait-placeholder').hidden=false;};
+          portrait.append(image);
+        }
+        if(image.getAttribute('src')!==c.photo)image.src=c.photo;
+      }
+    });
   }
 
   function renderCandidateProfile(index){
     if(!state.profilesReady)return;
     state.profileIndex=(index+state.profiles.length)%state.profiles.length;
     const c=state.profiles[state.profileIndex];
+    document.querySelectorAll('.bar-candidate').forEach(function(button,i){button.setAttribute('aria-current',String(i===state.profileIndex));});
     $('candidate-number').textContent=c.number;
     $('candidate-name').textContent=c.name;$('candidate-address').textContent=c.address;
     $('candidate-support').textContent='Blok pengusung: '+(c.supportingBlock||'Belum tersedia');
@@ -187,12 +192,6 @@
     if(state.inFlight && Date.now()-state.requestStarted>30000)updateConnectionStatus('stale',state.results?'Sinkronisasi lambat · data terakhir':'Sinkronisasi lambat');
     else if(state.results && !state.inFlight && !state.lastError && Date.now()-Date.parse(state.results.readAt)>25000)updateConnectionStatus('stale','Data lama · menunggu sinkronisasi');
   }
-  function checkCharts(){
-    if(state.chartLoading || !window.google || !google.charts)return;
-    state.chartLoading=true;clearInterval(state.chartCheckTimer);state.chartCheckTimer=null;
-    google.charts.load('current',{packages:['corechart'],language:'id'});
-    google.charts.setOnLoadCallback(function(){state.chartReady=true;if(!state.stopped)renderBarChart();});
-  }
   function startAutoRefresh(){
     if(state.refreshTimer)clearInterval(state.refreshTimer);
     loadResults();state.refreshTimer=setInterval(loadResults,10000);
@@ -210,13 +209,12 @@
   function stopTimers(){
     state.stopped=true;
     if(state.requestController)state.requestController.abort();
-    ['refreshTimer','clockTimer','slideshowTimer','chartCheckTimer'].forEach(function(key){clearInterval(state[key]);state[key]=null;});
+    ['refreshTimer','clockTimer','slideshowTimer'].forEach(function(key){clearInterval(state[key]);state[key]=null;});
     clearTimeout(state.resizeTimer);
   }
   function startTimers(){
     state.stopped=false;tickClock();state.clockTimer=setInterval(tickClock,1000);
     startCandidateSlideshow();startAutoRefresh();
-    if(!state.chartReady && !state.chartLoading){state.chartCheckTimer=setInterval(checkCharts,300);checkCharts();}
   }
   $('previous-button').addEventListener('click',function(){showProfile(state.profileIndex-1);});
   $('next-button').addEventListener('click',function(){showProfile(state.profileIndex+1);});

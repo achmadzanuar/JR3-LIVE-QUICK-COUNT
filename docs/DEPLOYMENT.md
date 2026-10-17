@@ -9,11 +9,16 @@ Repository: https://github.com/achmadzanuar/JR3-LIVE-QUICK-COUNT
 Deployment awal pada 17 Oktober 2026 berhasil. Halaman publik mengembalikan
 HTTP 200 tanpa login. Profil dan tujuh poster asli tersedia. Pemeriksaan
 desktop 1920×1080 dan ponsel dilakukan pada website yang sudah diterbitkan.
-20 tes backend dan 13 tes browser lulus sebelum deployment.
+Tampilan telah diperbarui mengikuti referensi Quick Count: warna biru gelap,
+judul bertumpuk, batang persentase vertikal, dan tujuh poster asli. Grafik
+responsif dapat digeser pada ponsel. Klik poster untuk mengganti profil.
+20 tes backend dan 17 tes browser lulus untuk tampilan ini.
 
 ## Status sumber
 
-**Siap diuji; Google Sheets belum terhubung.** Mode awal adalah `dummy`.
+**Siap diuji; Google Sheets belum terhubung.** Default kode adalah `dummy`.
+Konfigurasi Vercel telah diganti ke spreadsheet utama yang diberikan panitia,
+dengan ID/GID eksplisit dan `ELECTION_MODE=production`.
 `/api/results` mengembalikan HTTP 503 dengan `SOURCE_NOT_CONFIGURED` sampai
 service account dipasang. Hasil tampil `—`, bukan nol atau suara buatan.
 

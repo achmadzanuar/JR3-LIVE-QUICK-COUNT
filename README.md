@@ -1,7 +1,7 @@
 # JR3 Live Quick Count — Vercel
 
 Dashboard publik untuk Pemilihan Ketua Paguyuban Java Residence Cluster 3
-2026–2027. Frontend HTML/CSS/JavaScript vanilla, Google Charts, dan satu Vercel
+2026–2027. Frontend HTML/CSS/JavaScript vanilla dan satu Vercel
 Function Node.js. Tidak menggunakan Apps Script atau database tambahan.
 
 **Default: SIMULASI / spreadsheet dummy.** Belum ada suara yang ditampilkan
@@ -56,6 +56,12 @@ memerlukan redeploy; polling membaca pembaruan setiap 10 detik.
 ## Perilaku aplikasi
 
 - Urutan calon 01–07 selalu tetap; slideshow 15 detik, navigasi, pause, fullscreen.
+- Tampilan mengikuti referensi Quick Count: latar biru gelap, judul bertumpuk,
+  aksen oranye, tujuh batang persentase vertikal dengan poster asli di bawahnya.
+  Klik poster untuk melihat profil. Pada ponsel grafik dapat digeser horizontal.
+  Grafik HTML/CSS tidak membutuhkan library eksternal atau Google Charts.
+- Polling mempertahankan fokus keyboard pada tombol calon, serta hasil dan
+  posisi grafik ketika koneksi gagal. Persentase tidak berubah menjadi jumlah suara.
 - Blok XI/11, IV/4, VI/6 setara; nomor rumah 11, 11A, 11B tetap berbeda.
 - Hitung respons valid paling awal per rumah. Pilihan tidak dikenal atau
   metadata tidak valid tidak menghabiskan hak suara rumah tersebut.

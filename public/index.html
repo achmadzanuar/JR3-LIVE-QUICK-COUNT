@@ -2,8 +2,10 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="dark">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090c27">
+  <meta name="description" content="Hasil sementara pemilihan Ketua Paguyuban Java Residence Cluster 3. Persentase suara tujuh calon, diperbarui setiap 10 detik.">
   <title>JR3 Live Quick Count</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
@@ -21,7 +23,7 @@
     </header>
 
     <section class="title-row" aria-labelledby="page-title">
-      <div><div class="eyebrow"><span class="live-dot" aria-hidden="true"></span> PEMILIHAN KETUA PAGUYUBAN</div><h1 id="page-title">LIVE <span>QUICK COUNT</span></h1><p>Java Residence Cluster 3 <span class="title-divider">/</span> Periode 2026–2027</p></div>
+      <div class="election-heading"><div class="eyebrow"><span class="live-dot" aria-hidden="true"></span> PEMILIHAN KETUA PAGUYUBAN</div><h1 id="page-title">Quick<span>Count<span class="title-dot">.</span></span></h1><p>Java Residence Cluster 3 <span class="title-divider">/</span> <strong>2026–2027</strong></p></div>
       <div class="connection-block"><span class="provisional">SIMULASI · DATA DUMMY</span><span class="connection" id="connection-status" data-state="waiting" role="status" aria-live="polite"><i aria-hidden="true"></i><span id="connection-text">Menunggu sinkronisasi</span></span></div>
     </section>
 
@@ -36,18 +38,21 @@
 
     <main class="main-grid">
       <section class="panel results-panel" aria-labelledby="results-title">
-        <div class="panel-heading"><div><span class="section-kicker">PERSENTASE SUARA</span><h2 id="results-title">Persentase pilihan warga.</h2></div><span class="small-pill">01—07</span></div>
-        <p class="panel-description">Urutan calon tetap mengikuti nomor urut pemilihan.</p>
-        <div class="plot" id="plot">
-          <div id="bar-chart" role="img" aria-label="Diagram batang persentase suara tujuh calon"></div>
-          <ol id="bar-list" class="bar-list" aria-label="Persentase suara per calon"></ol>
+        <div class="panel-heading"><div><span class="section-kicker">PEROLEHAN SEMENTARA</span><h2 id="results-title">Suara warga, dalam persen.</h2></div><span class="small-pill">01—07</span></div>
+        <p class="panel-description">Satu rumah, satu suara. Urutan calon tetap 01–07.<span class="scroll-hint">Geser grafik untuk melihat semua calon →</span></p>
+        <div class="chart-viewport" tabindex="0" role="region" aria-label="Grafik persentase tujuh calon; geser untuk melihat semua calon pada layar kecil">
+          <div class="plot" id="plot">
+            <div class="chart-axis" aria-hidden="true"><span>100%</span><span>50%</span><span>0%</span></div>
+            <div class="bar-grid" aria-hidden="true"></div>
+            <ol id="bar-list" class="bar-list" aria-label="Persentase suara per calon"></ol>
+          </div>
         </div>
         <div class="results-bottom"><span><i class="legend-dot" aria-hidden="true"></i>Persentase dari total suara sah</span><span id="chart-total">Skala <strong>0–100%</strong></span></div>
         <div class="review-summary" aria-label="Rincian respons dikecualikan"><span>Duplikat <b id="stat-duplicates">—</b></span><span>Tidak terpetakan <b id="stat-unmapped">—</b></span><span>Alamat / waktu bermasalah <b id="stat-metadata">—</b></span></div>
       </section>
 
       <section class="panel profile-panel" aria-labelledby="profile-title">
-        <div class="panel-heading"><div><span class="section-kicker">KENALI CALON KITA</span><h2 id="profile-title">Untuk lingkungan lebih baik.</h2></div><span id="profile-position" class="small-pill">01 / 07</span></div>
+        <div class="panel-heading"><div><span class="section-kicker">KENALI PILIHAN KITA</span><h2 id="profile-title">Calon ketua paguyuban.</h2></div><span id="profile-position" class="small-pill">01 / 07</span></div>
         <div class="profile-scroll" id="profile-scroll" tabindex="0" role="region" aria-label="Profil dan visi-misi calon; gulir untuk membaca seluruh isi">
           <div class="profile-intro"><div class="poster-frame"><img id="candidate-photo" alt="" hidden><span id="photo-unavailable" class="photo-unavailable">Memuat poster asli…</span></div><div class="candidate-identity"><span class="candidate-number" id="candidate-number">01</span><h3 id="candidate-name">Memuat profil calon…</h3><p id="candidate-address">—</p><span class="supporting-block" id="candidate-support">Blok pengusung: Belum tersedia</span></div></div>
           <div class="profile-copy"><span class="copy-label">VISI</span><p class="vision" id="candidate-vision">—</p><span class="copy-label">MISI</span><ol id="candidate-missions" class="missions"></ol></div>
@@ -61,7 +66,6 @@
 
     <footer class="footer"><div class="sync-footer"><span class="sync-icon" id="sync-icon" aria-hidden="true">↻</span><span>Sinkronisasi terakhir <strong id="last-sync">—</strong></span><span class="refresh-caption">Pembaruan otomatis setiap 10 detik</span></div><p>Simulasi menggunakan spreadsheet dummy.</p></footer>
   </div>
-  <script src="https://www.gstatic.com/charts/loader.js" async></script>
   <script src="/app.js" defer></script>
 </body>
 </html>
