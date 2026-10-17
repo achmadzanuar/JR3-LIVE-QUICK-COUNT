@@ -39,6 +39,7 @@ palsu. Spreadsheet tetap Restricted; jangan Publish to web.
 | `CHOICE_HEADER` | Opsional: override header pilihan lengkap jika judul berbeda |
 | `ADDRESS_HEADER` | Opsional: override header alamat jika judul berbeda |
 | `TIMESTAMP_HEADER` | Opsional: override header timestamp jika judul berbeda |
+| `GOOGLE_ADDRESS_CORRECTIONS_JSON` | Opsional: koreksi alamat yang dikonfirmasi panitia, Sensitive dan hanya server |
 
 Header otomatis yang didukung: judul pilihan **Daftar Calon Ketua Paguyuban
 Periode 2026-2027**, alamat **Blok & Nomor Rumah**, timestamp **Timestamp**,
@@ -69,6 +70,10 @@ memerlukan redeploy; polling membaca pembaruan setiap 10 detik.
 - Polling mempertahankan fokus keyboard pada tombol calon, serta hasil dan
   posisi grafik ketika koneksi gagal. Persentase tidak berubah menjadi jumlah suara.
 - Blok XI/11, IV/4, VI/6 setara; nomor rumah 11, 11A, 11B tetap berbeda.
+- Pemisah `&`, awalan `Block`, penanda `nomer`, dan titik sebelum `No` dikenali
+  bila batas blok/rumah jelas. Romawi tidak baku dan nomor rumah Romawi tetap
+  ditolak secara umum. [Koreksi khusus](docs/ADDRESS-CORRECTIONS.md) memerlukan
+  konfirmasi panitia dan tidak dikirim ke browser.
 - Hitung respons valid paling awal per rumah. Pilihan tidak dikenal atau
   metadata tidak valid tidak menghabiskan hak suara rumah tersebut.
 - Timestamp Google Sheets dibaca sebagai serial, tanpa menebak tanggal teks.

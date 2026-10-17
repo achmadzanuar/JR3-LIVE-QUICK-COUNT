@@ -60,6 +60,25 @@ test('sumber tanpa izin dan rate limit disanitasi',async()=>{
 test('header berubah tidak berubah menjadi hasil nol',async()=>{
   const s=setup({values:[['Wrong','Headers']]});await assert.rejects(s.service(),/HEADER_INVALID/);
 });
+
+test('koreksi server diterapkan sebelum deduplikasi tanpa bocor ke payload',async()=>{
+  const values=fixture();values[1][2]='REVIEWED AMBIGUOUS INPUT';
+  const spreadsheetId='UNIT_TEST_MAIN_SPREADSHEET_12345';
+  const corrections={spreadsheetId,gid:861129643,entries:[{row:2,expectedAddress:values[1][2],correctedAddress:'11/5'}]};
+  const s=setup({values,env:{GOOGLE_SPREADSHEET_ID:spreadsheetId,GOOGLE_ADDRESS_CORRECTIONS_JSON:JSON.stringify(corrections)}});
+  const result=await s.service();
+  assert.equal(result.statistics.validVotes,1);assert.equal(result.statistics.duplicates,1);
+  assert.equal(result.candidates[0].votes,1);assert.equal(result.statistics.invalidMetadata,0);
+  assert.doesNotMatch(JSON.stringify(result),/REVIEWED|correctedAddress|expectedAddress|11\/5|entries|row/);
+  s.env.GOOGLE_ADDRESS_CORRECTIONS_JSON=JSON.stringify({...corrections,entries:[{...corrections.entries[0],correctedAddress:'11/6'}]});
+  assert.equal((await s.service()).statistics.validVotes,2); // Changed corrections invalidate cache.
+});
+
+test('koreksi usang disanitasi dan tidak menghasilkan nol palsu',async()=>{
+  const spreadsheetId='UNIT_TEST_MAIN_SPREADSHEET_12345';
+  const s=setup({env:{GOOGLE_SPREADSHEET_ID:spreadsheetId,GOOGLE_ADDRESS_CORRECTIONS_JSON:JSON.stringify({spreadsheetId,gid:861129643,entries:[{row:2,expectedAddress:'OLD INPUT',correctedAddress:'11/6'}]})}});
+  await assert.rejects(s.service(),e=>publicSourceError(e).code==='CORRECTION_STALE');
+});
 test('API tanpa kredensial: status 503, mode dummy, tanpa hasil palsu',async()=>{
   const handle=createResultsHandler(createResultsService({env:{}}),{});const response=await handle(new Request('https://example.test/api/results'));const body=await response.json();
   assert.equal(response.status,503);assert.equal(body.mode,'dummy');assert.equal(body.error.code,'SOURCE_NOT_CONFIGURED');assert.equal(body.statistics,undefined);assert.equal(response.headers.get('cache-control'),'no-store');

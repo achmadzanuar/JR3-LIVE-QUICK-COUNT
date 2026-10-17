@@ -14,7 +14,18 @@ test('blok angka/Romawi dan nol di depan setara',()=>{
   assert.notEqual(normalizeHouseAddress('6/11A').key,normalizeHouseAddress('6/11B').key);
 });
 test('alamat ambigu dan Romawi tidak baku ditolak',()=>{
-  for(const input of ['IIX/5','IIII/5','IC/5','XI5','XI','0/5','XI/0','XI/11AB','XI/5 RT 1','XI/5 dan 11/6'])assert.equal(normalizeHouseAddress(input),null,input);
+  for(const input of ['IIX/5','IIII/5','IC/5','XI5','XI','0/5','XI/0','XI/11AB','XI/5 RT 1','XI/5 dan 11/6','Xll NO 8','XXI NO.V','X & 5 & 6'])assert.equal(normalizeHouseAddress(input),null,input);
+});
+
+test('pemisah ampersand, Block, nomer, dan titik sebelum No dikenali dengan batas jelas',()=>{
+  for(const input of ['VII & 04','Block VII nomer 4','Blok.VII NOMER 04','blok vii. no. 4','BLOK 7 & NO. 4']) {
+    assert.equal(normalizeHouseAddress(input)?.key,'7/4',input);
+  }
+  assert.equal(normalizeHouseAddress('Blok III nomer 8A').key,'3/8A');
+  const result=calculateVoteTotals([[date(0),'Block VII nomer 4',choices[0]],[date(1),'7/04',choices[1]]],columns);
+  assert.equal(result.statistics.validVotes,1);
+  assert.equal(result.statistics.duplicates,1);
+  assert.equal(result.candidates[0].votes,1);
 });
 test('respons valid pertama per rumah, pilihan tak dikenal tidak menghabiskan hak',()=>{
   const result=calculateVoteTotals([[date(0),'XI/5','UNKNOWN'],[date(20),'11/05',choices[1]],[date(10),'Blok XI No. 5',choices[0]],[date(30),'VI/11a',choices[3]],[date(40),'6/011A',choices[6]],[date(30),'6/11B',choices[6]]],columns);
