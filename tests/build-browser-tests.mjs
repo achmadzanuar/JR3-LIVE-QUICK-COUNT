@@ -130,6 +130,27 @@ async function runUiTests(){
     qa.mode='success';window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));
     assert(!state.stopped&&state.refreshTimer&&state.clockTimer&&state.slideshowTimer,'timer tidak pulih');await settle();
   });
+  await check('Tema terang dan gelap tidak mengubah data atau batang grafik',()=>{
+    const values=[...document.querySelectorAll('.bar-value')].map(el=>el.textContent).join('|');
+    const fills=[...document.querySelectorAll('.bar-fill')].map(el=>el.style.height).join('|');
+    document.querySelector('[data-theme-choice="dark"]').click();
+    assert(document.documentElement.dataset.theme==='dark','tema gelap gagal');
+    assert(document.querySelector('[data-theme-choice="dark"]').getAttribute('aria-pressed')==='true','status tombol gelap');
+    assert(document.querySelector('meta[name="theme-color"]').content==='#090c27','warna browser gelap');
+    document.querySelector('[data-theme-choice="light"]').click();
+    assert(document.documentElement.dataset.theme==='light','tema terang gagal');
+    assert(document.querySelector('[data-theme-choice="light"]').getAttribute('aria-pressed')==='true','status tombol terang');
+    assert(document.querySelector('meta[name="theme-color"]').content==='#f3f6fc','warna browser terang');
+    assert([...document.querySelectorAll('.bar-value')].map(el=>el.textContent).join('|')===values,'angka berubah');
+    assert([...document.querySelectorAll('.bar-fill')].map(el=>el.style.height).join('|')===fills,'batang berubah');
+  });
+  await check('Pilihan tema disimpan dan hanya satu tombol aktif',()=>{
+    document.querySelector('[data-theme-choice="dark"]').click();
+    assert(localStorage.getItem('jr3-theme')==='dark','tema gelap tidak tersimpan');
+    assert(document.querySelectorAll('[data-theme-choice][aria-pressed="true"]').length===1,'dua tombol aktif');
+    document.querySelector('[data-theme-choice="light"]').click();
+    assert(localStorage.getItem('jr3-theme')==='light','tema terang tidak tersimpan');
+  });
   stopTimers();showProfile(0);
   $('test-report').textContent=JSON.stringify({passed:report.filter(r=>r.status==='PASS').length,failed:report.filter(r=>r.status==='FAIL').length,skipped:0,tests:report},null,2);
   document.title='UI TEST '+(report.some(r=>r.status==='FAIL')?'FAILED':'PASSED')+' — JR3';
@@ -142,5 +163,6 @@ let html=fs.readFileSync(path.join(root,'public/index.html'),'utf8')
   .replace('<body>','<body><aside style="position:fixed;top:0;left:0;right:0;padding:7px;background:#8b3122;color:white;font:bold 12px Arial;z-index:10;text-align:center">TEST ONLY — ANGKA SINTETIS, BUKAN HASIL PEMILIHAN</aside><details style="position:fixed;bottom:8px;right:8px;z-index:10;background:#111b35;border:1px solid #ffffff30;border-radius:8px;padding:10px;max-width:450px;font-size:11px"><summary>Hasil pengujian browser</summary><pre id="test-report" style="white-space:pre-wrap;max-height:300px;overflow:auto">Menjalankan pengujian…</pre></details>');
 fs.writeFileSync(path.join(out,'index.html'),html);
 fs.copyFileSync(path.join(root,'public/styles.css'),path.join(out,'styles.css'));
+fs.copyFileSync(path.join(root,'public/theme.js'),path.join(out,'theme.js'));
 fs.cpSync(path.join(root,'public/assets'),path.join(out,'assets'),{recursive:true});
 console.log('Isolated browser tests: '+out);

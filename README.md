@@ -62,6 +62,10 @@ memerlukan redeploy; polling membaca pembaruan setiap 10 detik.
 
 ## Perilaku aplikasi
 
+- Tema **Terang / Gelap** tersedia di header. Pengunjung baru mendapat tema
+  terang; pilihan tersimpan di browser dan dipulihkan sebelum stylesheet dimuat.
+  Tema tetap dapat diganti ketika penyimpanan browser tidak tersedia. Pilihan
+  tema tidak mengubah data, persentase, atau pengaturan proyektor.
 - Urutan calon 01–07 selalu tetap; slideshow 15 detik, navigasi, pause, fullscreen.
 - Tampilan mengikuti referensi Quick Count: latar biru gelap, judul bertumpuk,
   aksen oranye, tujuh batang persentase vertikal dengan poster asli di bawahnya.

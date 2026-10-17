@@ -12,8 +12,10 @@ desktop 1920×1080 dan ponsel dilakukan pada website yang sudah diterbitkan.
 Tampilan telah diperbarui mengikuti referensi Quick Count: warna biru gelap,
 judul bertumpuk, batang persentase vertikal, dan tujuh poster asli. Grafik
 responsif dapat digeser pada ponsel. Klik poster untuk mengganti profil.
-30 tes backend (termasuk OIDC dan koreksi alamat) lulus. Tampilan sebelumnya
-lulus 17 tes browser dan tidak berubah pada perbaikan alamat ini.
+30 tes backend (termasuk OIDC dan koreksi alamat) lulus. Tampilan dengan pilihan
+Terang/Gelap lulus 19 tes browser, termasuk perubahan tema tanpa mengubah data
+dan penyimpanan pilihan. Tema terang menjadi default pengunjung baru. Pemulihan
+tema setelah reload serta layout desktop/proyektor dan ponsel diperiksa langsung.
 
 ## Status sumber
 

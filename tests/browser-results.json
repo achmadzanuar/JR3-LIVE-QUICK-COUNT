@@ -1,5 +1,5 @@
 {
-  "passed": 17,
+  "passed": 19,
   "failed": 0,
   "skipped": 0,
   "tests": [
@@ -69,6 +69,14 @@
     },
     {
       "name": "Timer berhenti saat pagehide dan pulih saat pageshow",
+      "status": "PASS"
+    },
+    {
+      "name": "Tema terang dan gelap tidak mengubah data atau batang grafik",
+      "status": "PASS"
+    },
+    {
+      "name": "Pilihan tema disimpan dan hanya satu tombol aktif",
       "status": "PASS"
     }
   ]

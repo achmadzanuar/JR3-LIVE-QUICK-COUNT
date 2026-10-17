@@ -14,4 +14,5 @@ fs.writeFileSync(path.join(root,'public/candidates.json'),JSON.stringify(profile
 const app=fs.readFileSync(path.join(root,'public/app.js'),'utf8');
 if(app.includes('google.script')||app.includes('GOOGLE_SERVICE_ACCOUNT'))throw new Error('Server code leaked to public UI');
 new vm.Script(app);
+new vm.Script(fs.readFileSync(path.join(root,'public/theme.js'),'utf8'));
 console.log('Build verified: 7 real profiles, 7 posters, percentage-only chart.');
