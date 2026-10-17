@@ -1,0 +1,59 @@
+{
+  "passed": 13,
+  "failed": 0,
+  "skipped": 0,
+  "tests": [
+    {
+      "name": "Konfigurasi belum siap: angka tetap —",
+      "status": "PASS"
+    },
+    {
+      "name": "Tidak ada panggilan hasil bertumpuk",
+      "status": "PASS"
+    },
+    {
+      "name": "Grafik hanya persentase; total suara terpisah di kartu",
+      "status": "PASS"
+    },
+    {
+      "name": "Kegagalan RPC mempertahankan data dan waktu terakhir",
+      "status": "PASS"
+    },
+    {
+      "name": "Payload tidak konsisten ditolak",
+      "status": "PASS"
+    },
+    {
+      "name": "Pembaruan lebih lama ditolak",
+      "status": "PASS"
+    },
+    {
+      "name": "Pergantian profil tidak mengubah urutan grafik",
+      "status": "PASS"
+    },
+    {
+      "name": "Pause dan lanjut slideshow",
+      "status": "PASS"
+    },
+    {
+      "name": "Slideshow berganti setelah durasi 15 detik",
+      "status": "PASS"
+    },
+    {
+      "name": "Data lama mendapat status stale",
+      "status": "PASS"
+    },
+    {
+      "name": "Sheet kosong menampilkan nol dengan persentase aman",
+      "status": "PASS"
+    },
+    {
+      "name": "Timer berhenti saat pagehide dan pulih saat pageshow",
+      "status": "PASS"
+    },
+    {
+      "name": "Google Charts: urutan tetap, label persen, skala 0–100%",
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JR3 Live Quick Count</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="dashboard" id="dashboard">
+    <header class="masthead">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M6 23 24 8l18 15M11 20v21h26V20M20 41V28h8v13" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 13V7h6" stroke="currentColor" stroke-width="2.4"/></svg></span>
+        <div><strong>JAVA RESIDENCE</strong><span>CLUSTER 3 · KEBERSAMAAN KITA</span></div>
+      </div>
+      <div class="header-tools">
+        <div class="clock"><strong id="clock-time">— WIB</strong><span id="clock-date">—</span></div>
+        <button class="icon-button" id="fullscreen-button" type="button" title="Mode proyektor / layar penuh" aria-label="Aktifkan mode proyektor" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      </div>
+    </header>
+
+    <section class="title-row" aria-labelledby="page-title">
+      <div><div class="eyebrow"><span class="live-dot" aria-hidden="true"></span> PEMILIHAN KETUA PAGUYUBAN</div><h1 id="page-title">LIVE <span>QUICK COUNT</span></h1><p>Java Residence Cluster 3 <span class="title-divider">/</span> Periode 2026–2027</p></div>
+      <div class="connection-block"><span class="provisional">SIMULASI · DATA DUMMY</span><span class="connection" id="connection-status" data-state="waiting" role="status" aria-live="polite"><i aria-hidden="true"></i><span id="connection-text">Menunggu sinkronisasi</span></span></div>
+    </section>
+
+    <div id="notice" class="notice" role="status" hidden></div>
+
+    <section class="statistics" aria-label="Statistik pemilihan">
+      <article class="stat stat-primary"><span class="stat-label">SUARA SAH MASUK</span><strong id="stat-valid">—</strong><span class="stat-note">Satu rumah · satu suara</span></article>
+      <article class="stat"><span class="stat-label">CALON KETUA</span><strong>7<span class="stat-unit">calon</span></strong><span class="stat-note">Urutan sesuai Google Form</span></article>
+      <article class="stat"><span class="stat-label">TOTAL RESPONS</span><strong id="stat-responses">—</strong><span class="stat-note">Seluruh respons yang masuk</span></article>
+      <article class="stat"><span class="stat-label">RESPONS DIKECUALIKAN</span><strong id="stat-excluded">—</strong><span class="stat-note" id="excluded-note">Duplikat / perlu pemeriksaan</span></article>
+    </section>
+
+    <main class="main-grid">
+      <section class="panel results-panel" aria-labelledby="results-title">
+        <div class="panel-heading"><div><span class="section-kicker">PERSENTASE SUARA</span><h2 id="results-title">Persentase pilihan warga.</h2></div><span class="small-pill">01—07</span></div>
+        <p class="panel-description">Urutan calon tetap mengikuti nomor urut pemilihan.</p>
+        <div class="plot" id="plot">
+          <div id="bar-chart" role="img" aria-label="Diagram batang persentase suara tujuh calon"></div>
+          <ol id="bar-list" class="bar-list" aria-label="Persentase suara per calon"></ol>
+        </div>
+        <div class="results-bottom"><span><i class="legend-dot" aria-hidden="true"></i>Persentase dari total suara sah</span><span id="chart-total">Skala <strong>0–100%</strong></span></div>
+        <div class="review-summary" aria-label="Rincian respons dikecualikan"><span>Duplikat <b id="stat-duplicates">—</b></span><span>Tidak terpetakan <b id="stat-unmapped">—</b></span><span>Alamat / waktu bermasalah <b id="stat-metadata">—</b></span></div>
+      </section>
+
+      <section class="panel profile-panel" aria-labelledby="profile-title">
+        <div class="panel-heading"><div><span class="section-kicker">KENALI CALON KITA</span><h2 id="profile-title">Untuk lingkungan lebih baik.</h2></div><span id="profile-position" class="small-pill">01 / 07</span></div>
+        <div class="profile-scroll" id="profile-scroll" tabindex="0" role="region" aria-label="Profil dan visi-misi calon; gulir untuk membaca seluruh isi">
+          <div class="profile-intro"><div class="poster-frame"><img id="candidate-photo" alt="" hidden><span id="photo-unavailable" class="photo-unavailable">Memuat poster asli…</span></div><div class="candidate-identity"><span class="candidate-number" id="candidate-number">01</span><h3 id="candidate-name">Memuat profil calon…</h3><p id="candidate-address">—</p><span class="supporting-block" id="candidate-support">Blok pengusung: Belum tersedia</span></div></div>
+          <div class="profile-copy"><span class="copy-label">VISI</span><p class="vision" id="candidate-vision">—</p><span class="copy-label">MISI</span><ol id="candidate-missions" class="missions"></ol></div>
+        </div>
+        <div class="profile-controls"><div class="profile-dots" id="profile-dots" aria-label="Pilih profil calon"></div><div class="control-buttons"><button id="previous-button" class="control-button" type="button" aria-label="Calon sebelumnya">←</button><button id="pause-button" class="control-button pause-button" type="button" aria-label="Jeda slideshow" aria-pressed="false">Ⅱ</button><button id="next-button" class="control-button" type="button" aria-label="Calon berikutnya">→</button></div></div>
+        <div class="slideshow-progress"><span id="slideshow-progress"></span></div>
+      </section>
+    </main>
+
+    <section class="participation-row" aria-label="Partisipasi pemilih"><span>Pemilih terdaftar <strong id="stat-registered">Belum tersedia</strong></span><span>Partisipasi <strong id="stat-participation">Belum tersedia</strong></span><span class="participation-note">Satuan pemilih: rumah / KK</span></section>
+
+    <footer class="footer"><div class="sync-footer"><span class="sync-icon" id="sync-icon" aria-hidden="true">↻</span><span>Sinkronisasi terakhir <strong id="last-sync">—</strong></span><span class="refresh-caption">Pembaruan otomatis setiap 10 detik</span></div><p>Simulasi menggunakan spreadsheet dummy.</p></footer>
+  </div>
+  <script src="https://www.gstatic.com/charts/loader.js" async></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>

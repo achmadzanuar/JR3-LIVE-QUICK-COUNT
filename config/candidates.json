@@ -1,0 +1,129 @@
+[
+  {
+    "id": "muslimin",
+    "number": "01",
+    "name": "Muslimin",
+    "address": "Blok XI No. 5",
+    "supportingBlock": "XI & XIV",
+    "color": "#507e62",
+    "vision": "Mewujudkan masyarakat JAVA 3 Rukun, Guyup, Aman dan bersatu padu walaupun berbeda beda suku dan agama.",
+    "missions": [
+      "Meningkatkan hubungan bersosial dan bermasarakat",
+      "memberikan pelayanan yg terbaik buat masarakat java 3",
+      "mengembankan masarakat sistim demokrasi"
+    ],
+    "photo": "/assets/candidates/muslimin.jpg",
+    "answers": [
+      "Muslimin, Blok XI no.5. Visi : \"Mewujudkan masyarakat JAVA 3 Rukun, Guyup, Aman dan bersatu padu walaupun berbeda beda suku dan agama\". Misi : \"Meningkatkan hubungan bersosial dan bermasarakat, memberikan pelayanan yg terbaik buat masarakat java 3, mengembankan masarakat sistim demokrasi\""
+    ]
+  },
+  {
+    "id": "hidayat",
+    "number": "02",
+    "name": "Muhammad Hidayat Nuryadin",
+    "address": "Blok XI No. 2",
+    "supportingBlock": "VII, IX, X, XII, XXV",
+    "color": "#ba8d3c",
+    "vision": "“Bersama Bergerak, Nyata Berdampak.” , Bersama Mewujudkan Java Residence Cluster 3 yang Kuat dalam kebersamaan, Komunikatif, Nyaman dan Tanggap terhadap aspirasi melalui kolaborasi serta kontribusi nyata seluruh lapisan warga.",
+    "missions": [
+      "Mewujudkan keterbukaan informasi antara warga, developer, dan pihak desa setempat, serta monitoring aspirasi dan tindak lanjutnya.",
+      "Mendorong inisiasi peningkatan fasilitas umum, RTH, Ruang ramah anak, dan aspirasi terkait keamanan.",
+      "Mengkoordinasikan pemenuhan hak fasum pemakaman dan penunjangnya serta inisiasi persiapan pembentukan RT/RW kedepan.",
+      "Memperkuat Kerukunan, Gotong Royong, dan Partisipasi Aktif Warga melalui musyawarah dan kolaborasi langkah nyata untuk kepentingan bersama.",
+      "Mengajak dan memastikan partisipasi warga dalam inovasi berkelanjutan untuk menunjang kegiatan-kegiatan besar dan sosial didalam lingkungan internal."
+    ],
+    "photo": "/assets/candidates/hidayat.jpg",
+    "answers": [
+      "Muhammad Hidayat Nuryadin, Blok XI no.2, Visi : “Bersama Bergerak, Nyata Berdampak.” , Bersama Mewujudkan Java Residence Cluster 3 yang Kuat dalam kebersamaan, Komunikatif, Nyaman dan Tanggap terhadap aspirasi melalui kolaborasi serta kontribusi nyata seluruh lapisan warga. Misi : 1. Mewujudkan keterbukaan informasi antara warga, developer, dan pihak desa setempat, serta monitoring aspirasi dan tindak lanjutnya. 2. Mendorong inisiasi peningkatan fasilitas umum, RTH, Ruang ramah anak, dan aspirasi terkait keamanan. 3. Mengkoordinasikan pemenuhan hak fasum pemakaman dan penunjangnya serta inisiasi persiapan pembentukan RT/RW kedepan. 4. Memperkuat Kerukunan, Gotong Royong, dan Partisipasi Aktif Warga melalui musyawarah dan kolaborasi langkah nyata untuk kepentingan bersama. 5. Mengajak dan memastikan partisipasi warga dalam inovasi berkelanjutan untuk menunjang kegiatan-kegiatan besar dan sosial didalam lingkungan internal."
+    ]
+  },
+  {
+    "id": "abdul-khamid",
+    "number": "03",
+    "name": "Abdul Khamid",
+    "address": "Blok XIV No. 6",
+    "supportingBlock": "XXIV & XXV",
+    "color": "#4d8390",
+    "vision": "Mewujudkan lingkungan Java 3 yang rukun, aman, nyaman, asri, harmonis yg di landasi semangat kebersamaan. Menjaga keamanan kebersihan dan ketertiban lingkungan bersama sama.",
+    "missions": [
+      "Menumbuhkan semangat gotong royong, peduli sosial dalam kehidupan sehari-hari.",
+      "Menyelenggarakan bantuan materi dan sosial bagi yg membutuhkan.",
+      "Menjadi tempat komunikasi yg efektif bagi warga dan pengurus di lingkungan."
+    ],
+    "photo": "/assets/candidates/abdul-khamid.jpg",
+    "answers": [
+      "Abdul Khamid, Blok XIV No. 6, Visi : Mewujudkan lingkungan Java 3 yang rukun, aman, nyaman, asri, harmonis yg di landasi semangat kebersamaan. Menjaga keamanan kebersihan dan ketertiban lingkungan bersama sama. Misi : 1. Menumbuhkan semangat gotong royong, peduli sosial dalam kehidupan sehari-hari. 2. Menyelenggarakan bantuan materi dan sosial bagi yg membutuhkan. 3. Menjadi tempat komunikasi yg efektif bagi warga dan pengurus di lingkungan."
+    ]
+  },
+  {
+    "id": "angga",
+    "number": "04",
+    "name": "Angga Nur Pramahardika",
+    "address": "Blok VI No. 11A",
+    "supportingBlock": "VI",
+    "color": "#b16d52",
+    "vision": "Membangun lingkungan yang aman, harmonis, dan transparan serta menjebatani antara warga cluster dengan RT/RW setempat.",
+    "missions": [
+      "Meningkatkan keamanan dan ketertiban cluster",
+      "Mempererat silaturahmi antar warga",
+      "Menyehatkan warga dengan kegiatan olahraga bersama."
+    ],
+    "photo": "/assets/candidates/angga.jpg",
+    "answers": [
+      "Angga Nur Pramahardika, Blok VI no. 11A, Visi : Membangun lingkungan yang aman, harmonis, dan transparan serta menjebatani antara warga cluster dengan RT/RW setempat. Misi : 1. Meningkatkan keamanan dan ketertiban cluster 2. Mempererat silaturahmi antar warga 3. Menyehatkan warga dengan kegiatan olahraga bersama."
+    ]
+  },
+  {
+    "id": "santoso",
+    "number": "05",
+    "name": "M. Santoso",
+    "address": "Blok XII No. 12",
+    "supportingBlock": "IV, VIII, XIII",
+    "color": "#8075a5",
+    "vision": "Mewujudkan lingkungan cluster yang nyaman, rukun, dan harmonis melalui kebersamaan seluruh warga.,",
+    "missions": [
+      "Mempererat silaturahmi dan kekompakan antarwarga.",
+      "Menampung aspirasi dan keluhan warga secara terbuka.",
+      "Menjadi penghubung yang baik antara warga, pengembang, dan pihak terkait."
+    ],
+    "photo": "/assets/candidates/santoso.jpg",
+    "answers": [
+      "M. Santoso, Blok XII No. 12, Visi : Mewujudkan lingkungan cluster yang nyaman, rukun, dan harmonis melalui kebersamaan seluruh warga., Misi : 1. Mempererat silaturahmi dan kekompakan antarwarga. 2. Menampung aspirasi dan keluhan warga secara terbuka. 3. Menjadi penghubung yang baik antara warga, pengembang, dan pihak terkait."
+    ]
+  },
+  {
+    "id": "syaifuddin",
+    "number": "06",
+    "name": "Syaifuddin Nizar",
+    "address": "Blok VI No. 3A",
+    "supportingBlock": "VI",
+    "color": "#7e9149",
+    "vision": "Mewujudkan lingkungan yang nyaman, bersih, rukun & damai melalui kebersamaan, gotong royong, & toleransi antar umat beragama.",
+    "missions": [
+      "Menjaga keindahan & fasilitas umum di lingkungan JRK 3.",
+      "Mempererat tali silaturrahmi antar warga melalui kegiatan keagamaan & olahraga.",
+      "Menumbuhkan solidaritas saat ada warga yang membutuhkan bantuan atau sakit."
+    ],
+    "photo": "/assets/candidates/syaifuddin.jpg",
+    "answers": [
+      "Syaifudin Nizar, Blok VI No. 3a, Visi : Mewujudkan lingkungan yang nyaman, bersih, rukun & damai melalui kebersamaan, gotong royong, & toleransi antar umat beragama. Misi : 1. Menjaga keindahan & fasilitas umum di lingkungan JRK 3. 2. Mempererat tali silaturrahmi antar warga melalui kegiatan keagamaan & olahraga. 3. Menumbuhkan solidaritas saat ada warga yang membutuhkan bantuan atau sakit."
+    ]
+  },
+  {
+    "id": "rizky",
+    "number": "07",
+    "name": "Rizky",
+    "address": "Blok V No. 11A",
+    "supportingBlock": "V",
+    "color": "#b86b7b",
+    "vision": "Mewujudkan lingkungan perumahan yang aman, nyaman.",
+    "missions": [
+      "Menjalin keguyuban di antara seluruh warga perumahan.",
+      "Mengembangkan kegiatan sosial kemasyarakatan, keagamaan, serta kerja sama yang aktif antarwarga."
+    ],
+    "photo": "/assets/candidates/rizky.jpg",
+    "answers": [
+      "Rizky, Blok V No. 11a, Visi : Mewujudkan lingkungan perumahan yang aman, nyaman. Misi : 1. Menjalin keguyuban di antara seluruh warga perumahan. 2. Mengembangkan kegiatan sosial kemasyarakatan, keagamaan, serta kerja sama yang aktif antarwarga."
+    ]
+  }
+]
