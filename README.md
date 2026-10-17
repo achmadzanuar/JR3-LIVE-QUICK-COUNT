@@ -67,7 +67,7 @@ memerlukan redeploy; polling membaca pembaruan setiap 10 detik.
   Tema tetap dapat diganti ketika penyimpanan browser tidak tersedia. Pilihan
   tema tidak mengubah data, persentase, atau pengaturan proyektor.
 - Urutan calon 01–07 selalu tetap; slideshow 15 detik, navigasi, pause, fullscreen.
-- Tampilan mengikuti referensi Quick Count: latar biru gelap, judul bertumpuk,
+- Tampilan mengikuti referensi Quick Count: latar biru gelap, judul ringkas satu baris,
   aksen oranye, tujuh batang persentase vertikal dengan poster asli di bawahnya.
   Klik poster untuk melihat profil. Pada ponsel grafik dapat digeser horizontal.
   Grafik HTML/CSS tidak membutuhkan library eksternal atau Google Charts.

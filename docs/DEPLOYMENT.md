@@ -10,7 +10,7 @@ Deployment awal pada 17 Oktober 2026 berhasil. Halaman publik mengembalikan
 HTTP 200 tanpa login. Profil dan tujuh poster asli tersedia. Pemeriksaan
 desktop 1920×1080 dan ponsel dilakukan pada website yang sudah diterbitkan.
 Tampilan telah diperbarui mengikuti referensi Quick Count: warna biru gelap,
-judul bertumpuk, batang persentase vertikal, dan tujuh poster asli. Grafik
+judul ringkas satu baris, batang persentase vertikal, dan tujuh poster asli. Grafik
 responsif dapat digeser pada ponsel. Klik poster untuk mengganti profil.
 30 tes backend (termasuk OIDC dan koreksi alamat) lulus. Tampilan dengan pilihan
 Terang/Gelap lulus 19 tes browser, termasuk perubahan tema tanpa mengubah data
