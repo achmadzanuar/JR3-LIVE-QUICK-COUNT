@@ -1,5 +1,9 @@
 # Hubungkan spreadsheet privat ke Vercel — satu kali
 
+**Untuk JR3 gunakan [koneksi OIDC tanpa key](CONNECT-OIDC.md).** Kebijakan
+organisasi memblokir key JSON. Panduan di bawah merupakan alternatif untuk
+lingkungan yang memang mengizinkan key; jangan menonaktifkan kebijakan tersebut.
+
 Tidak perlu Apps Script. Setelah selesai, penggantian sumber dilakukan dari
 environment variables Vercel, tanpa mengubah berkas aplikasi.
 

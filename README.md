@@ -11,10 +11,10 @@ pada konfigurasi produksi. Grafik calon menampilkan persen saja, skala tetap
 
 ## Koneksi Google satu kali
 
-Ikuti [docs/CONNECT-GOOGLE.md](docs/CONNECT-GOOGLE.md): buat service account,
-bagikan spreadsheet hanya sebagai Viewer ke email service account, lalu simpan
-JSON key sebagai **Secret environment variable** `GOOGLE_SERVICE_ACCOUNT_JSON`
-di Vercel. Tidak perlu membuat atau menyalin file Apps Script.
+Ikuti [koneksi OIDC tanpa key](docs/CONNECT-OIDC.md): gunakan identitas sementara
+Vercel melalui Google Workload Identity Federation, lalu bagikan spreadsheet
+sebagai Viewer ke service account. Tidak perlu private key atau Apps Script.
+Kode tetap mendukung key JSON untuk lingkungan yang mengizinkannya.
 
 ID spreadsheet dummy dan GID telah diisi sebagai default server. Header dibaca
 dan diverifikasi otomatis dari header aktual; kolom tidak dipilih berdasarkan
@@ -26,7 +26,12 @@ palsu. Spreadsheet tetap Restricted; jangan Publish to web.
 
 | Nama | Penggunaan |
 |---|---|
-| `GOOGLE_SERVICE_ACCOUNT_JSON` | Wajib: seluruh JSON key service account, sebagai Secret |
+| `GOOGLE_AUTH_MODE` | `vercel_oidc` tanpa key; `service_account` untuk alternatif key JSON |
+| `GCP_PROJECT_NUMBER` | Nomor project Google Cloud untuk OIDC |
+| `GCP_WORKLOAD_IDENTITY_POOL_ID` | Pool khusus aplikasi untuk OIDC |
+| `GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID` | Provider OIDC Vercel |
+| `GCP_SERVICE_ACCOUNT_EMAIL` | Email akun pembaca spreadsheet untuk OIDC |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | Hanya mode `service_account`: JSON key sebagai Secret |
 | `GOOGLE_SPREADSHEET_ID` | Opsional untuk dummy; wajib diisi ID spreadsheet utama saat produksi |
 | `GOOGLE_SHEET_GID` | Opsional untuk dummy; wajib diisi GID tab respons utama saat produksi |
 | `ELECTION_MODE` | `dummy` (default) atau `production` |
@@ -44,8 +49,9 @@ dinormalisasi. Jika lebih dari satu kolom memenuhi pemetaan, sumber ditolak.
 
 1. Berikan akses **Viewer** pada spreadsheet utama kepada service account yang sama.
 2. Isi `GOOGLE_SPREADSHEET_ID` dan `GOOGLE_SHEET_GID` utama di Vercel.
-3. Uji pembacaan dengan `ELECTION_MODE=dummy` terlebih dahulu, lalu ubah menjadi
-   `production` setelah hitungan cocok dengan pemeriksaan panitia.
+3. Untuk OIDC gunakan `ELECTION_MODE=production` di environment Production;
+   cocokkan agregat dengan pemeriksaan panitia sebelum acara. OIDC sengaja
+   menolak preview/development. Uji sintetis berjalan terpisah melalui `npm test`.
 4. Redeploy setiap kali mengubah environment variables. Kode tidak perlu diubah.
 
 Mode production sengaja menolak ID dummy bawaan atau sumber yang belum
