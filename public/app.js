@@ -88,8 +88,6 @@
 
   function renderStatistics(stats){
     [['stat-valid','validVotes'],['stat-responses','totalResponses'],['stat-excluded','excludedResponses'],['stat-duplicates','duplicates'],['stat-unmapped','unmappedResponses'],['stat-metadata','invalidMetadata']].forEach(function(pair){$(pair[0]).textContent=numberFormat.format(stats[pair[1]]);});
-    $('stat-registered').textContent=stats.registeredVoters===null?'Belum tersedia':numberFormat.format(stats.registeredVoters)+' rumah / KK';
-    $('stat-participation').textContent=stats.participation===null?'Belum tersedia':percentFormat.format(stats.participation)+'%';
   }
 
   function renderBarChart(){

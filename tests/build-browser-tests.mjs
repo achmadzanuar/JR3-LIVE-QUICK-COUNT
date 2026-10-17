@@ -57,7 +57,6 @@ async function runUiTests(){
   });
   await check('Grafik hanya menampilkan persen; total suara berada di kartu',()=>{
     assert($('stat-valid').textContent==='8'&&$('stat-responses').textContent==='10'&&$('stat-excluded').textContent==='2','total tidak cocok');
-    assert($('stat-participation').textContent==='66,67%','partisipasi salah');
     assert(JSON.stringify([...document.querySelectorAll('.bar-value')].map(el=>el.textContent))===JSON.stringify(['37,5%','25%','12,5%','12,5%','12,5%','0%','0%']),'label bukan persen');
     assert($('chart-total').textContent==='Skala 0–100%','skala grafik');
   });
