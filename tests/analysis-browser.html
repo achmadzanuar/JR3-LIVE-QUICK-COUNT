@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8"><title>JR3 audit UI tests · synthetic data</title></head><body><h1>Audit UI tests — synthetic data only</h1><button id="run">Run end-to-end UI checks</button><pre id="report"></pre><iframe id="audit" src="/analisis" style="width:100%;height:1000px"></iframe><script type="module">
+const frame=document.getElementById('audit'),report=document.getElementById('report');
+const pause=()=>new Promise(r=>setTimeout(r,80));
+async function until(predicate){for(let i=0;i<100;i++){if(predicate())return;await pause();}throw Error('Timed out');}
+function assert(value,message){if(!value)throw Error(message);report.textContent+='PASS '+message+'\n';}
+document.getElementById('run').onclick=async()=>{report.textContent='';try{
+  const win=frame.contentWindow,doc=frame.contentDocument,$=id=>doc.getElementById(id),input=(id,text)=>{$(id).value=text;$(id).dispatchEvent(new Event('input',{bubbles:true}));},submit=id=>$(id).requestSubmit();
+  win.confirm=()=>true;
+  if($('login-panel').hidden){$('logout').click();await until(()=>!$('login-panel').hidden);}
+  input('login-password','incorrect');submit('login-form');await until(()=>$('notice').textContent.includes('tidak sesuai'));assert(!$('login-panel').hidden,'wrong password stays locked');
+  input('login-password','JR3 audit browser test only');submit('login-form');await until(()=>$('login-panel').hidden);assert(!$('workspace').hidden,'login opens private workspace');
+  $('new-audit').click();await until(()=>!$('audit-content').hidden);assert($('stats').textContent.includes('Total respons5'),'source snapshot shows five synthetic responses');assert($('finalize').disabled,'unresolved response disables finalization');assert(!$('unsaved').hidden,'new snapshot has unsaved indicator');
+  doc.querySelector('[data-theme-choice=dark]').click();assert(doc.documentElement.dataset.theme==='dark','dark theme works');doc.querySelector('[data-theme-choice=light]').click();
+  $('status-filter').value='review';$('status-filter').dispatchEvent(new Event('change'));assert($('visible-count').textContent==='1 dari 5 respons','status filter shows one review');
+  $('response-rows').querySelector('button').click();await until(()=>$('decision-dialog').open);input('decision-address','IV/11B');input('decision-reason','Alamat sintetis dikonfirmasi untuk pengujian');submit('decision-form');await until(()=>!$('decision-dialog').open);assert(!$('finalize').disabled,'address correction resolves review');assert($('history').textContent.includes('Alamat sintetis dikonfirmasi'),'history renders reason');
+  $('status-filter').value='';$('status-filter').dispatchEvent(new Event('change'));input('search','XI/5');assert($('visible-count').textContent==='1 dari 5 respons','address search works');input('search','');
+  let saved=null;win.HTMLAnchorElement.prototype.click=function(){if(this.download)saved={url:this.href,name:this.download};};
+  $('save-audit').click();await until(()=>$('password-dialog').open);input('file-password','JR3 audit browser test only');submit('password-form');await until(()=>saved!==null&&!$('unsaved').hidden===false);assert(saved.name.includes('draft'),'draft download generated');assert($('unsaved').hidden,'export clears unsaved marker');
+  const bytes=await (await fetch(saved.url)).blob();const encrypted=await bytes.text();assert(!encrypted.includes('XI/5'),'download does not expose plaintext addresses');
+  const transfer=new DataTransfer();transfer.items.add(new File([bytes],'test.jr3audit'));$('file-input').files=transfer.files;$('file-input').dispatchEvent(new Event('change'));await until(()=>$('password-dialog').open);input('file-password','JR3 audit browser test only');submit('password-form');await until(()=>$('notice').textContent.includes('terverifikasi'));assert($('document-status').textContent.includes('DRAF'),'draft import verifies server signature');
+  saved=null;$('finalize').click();await until(()=>$('password-dialog').open);input('file-password','JR3 audit browser test only');submit('password-form');await until(()=>saved!==null);assert($('document-status').textContent==='FINAL TERKUNCI','final locked label');assert(!$('response-rows').querySelector('button'),'final response rows cannot edit');assert(saved.name.includes('final'),'final encrypted download generated');
+  $('revise').click();await until(()=>$('document-status').textContent.includes('VERSI 2'));assert($('source-info').textContent.includes('Revisi final'),'revision references final');assert($('response-rows').querySelector('button'),'revision re-enables review');
+  report.textContent+='DONE: all UI checks passed';
+}catch(error){report.textContent+='FAIL '+error.stack;}};
+</script></body></html>

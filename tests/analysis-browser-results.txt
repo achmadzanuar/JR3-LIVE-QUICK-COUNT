@@ -1,0 +1,20 @@
+PASS wrong password stays locked
+PASS login opens private workspace
+PASS source snapshot shows five synthetic responses
+PASS unresolved response disables finalization
+PASS new snapshot has unsaved indicator
+PASS dark theme works
+PASS status filter shows one review
+PASS address correction resolves review
+PASS history renders reason
+PASS address search works
+PASS draft download generated
+PASS export clears unsaved marker
+PASS download does not expose plaintext addresses
+PASS draft import verifies server signature
+PASS final locked label
+PASS final response rows cannot edit
+PASS final encrypted download generated
+PASS revision references final
+PASS revision re-enables review
+DONE: all UI checks passed
