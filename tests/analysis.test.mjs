@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {calculateAnalysis,serialToInstant,CUTOFF,RULES} from '../lib/analysis/engine.js';
 import {passwordHash,checkPassword,signer,canonical} from '../lib/analysis/security.js';
 import {createAnalysisHandler} from '../api/analysis.js';
-import {createAuditSource} from '../lib/analysis/source.js';
+import {createAuditSource,resolveRespondentNameColumn} from '../lib/analysis/source.js';
 import {encryptAudit,decryptAudit} from '../public/analisis/crypto.js';
 import candidates from '../config/candidates.json' with {type:'json'};
 
@@ -123,14 +123,26 @@ test('encrypted draft export/import, wrong password and ciphertext modification'
   await assert.rejects(decryptAudit(encrypted,'wrong'));
   const file=JSON.parse(encrypted);file.ciphertext='A'+file.ciphertext.slice(1);await assert.rejects(decryptAudit(JSON.stringify(file),password));
 });
-test('private source reads timezone and only the 3 needed columns; retains original addresses',async()=>{
+test('private source reads name and timezone, excludes contacts and retains original addresses',async()=>{
   const requests=[];const source=createAuditSource({env:{GOOGLE_SERVICE_ACCOUNT_JSON:JSON.stringify({type:'service_account',client_email:'test@test-project.iam.gserviceaccount.com',private_key:'-----BEGIN PRIVATE KEY-----TEST'})},tokenProvider:async()=> 'TEST_TOKEN',fetchImpl:async(url)=>{
     requests.push(url);
-    if(url.includes('values:batchGet'))return Response.json({valueRanges:[{values:[[serial('2026-10-23T19:00:00Z')]]},{values:[['XI/5']]},{values:[[candidates[0].answers[0]]]}]});
+    if(url.includes('values:batchGet'))return Response.json({valueRanges:[{values:[[serial('2026-10-23T19:00:00Z')]]},{values:[['XI/5']]},{values:[[candidates[0].answers[0]]]},{values:[['Responden Uji A']]}]});
     if(url.includes('/values/'))return Response.json({values:[['Timestamp','Nama Lengkap Pemilih','Blok & Nomor Rumah','Daftar Calon Ketua Paguyuban Periode 2026-2027','Kontak']]});
     return Response.json({properties:{timeZone:'Asia/Jakarta'},sheets:[{properties:{sheetId:861129643,title:'Responses',gridProperties:{rowCount:200,columnCount:5}}}]});
   }});
-  const value=await source();assert.equal(value.timeZone,'Asia/Jakarta');assert.equal(value.rows[0].timestamp,CUTOFF);assert.equal(value.rows[0].address,'XI/5');
-  assert.deepEqual(new URL(requests[2]).searchParams.getAll('ranges'),["'Responses'!A2:A","'Responses'!C2:C","'Responses'!D2:D"]);
+  const value=await source();assert.equal(value.timeZone,'Asia/Jakarta');assert.equal(value.rows[0].timestamp,CUTOFF);assert.equal(value.rows[0].address,'XI/5');assert.equal(value.rows[0].name,'Responden Uji A');
+  assert.deepEqual(new URL(requests[2]).searchParams.getAll('ranges'),["'Responses'!A2:A","'Responses'!C2:C","'Responses'!D2:D","'Responses'!B2:B"]);
   assert.doesNotMatch(JSON.stringify(value),/Nama Lengkap|Kontak|TEST_TOKEN/);
+});
+test('respondent name column follows header text and rejects missing or duplicate matches',()=>{
+  assert.equal(resolveRespondentNameColumn(['Other',' Nama  Lengkap Pemilih ']),1);
+  assert.throws(()=>resolveRespondentNameColumn(['Timestamp','Nama']),/HEADER_INVALID/);
+  assert.throws(()=>resolveRespondentNameColumn(['Nama Lengkap Pemilih','NAMA LENGKAP PEMILIH']),/HEADER_INVALID/);
+});
+test('names are signed source metadata and never change vote eligibility',async()=>{
+  const rows=[{...row(2,'1/1'),name:'<img src=x onerror=alert(1)>'},{...row(3,'1/1',1),name:'Responden Uji B'}];
+  const s=await setup(rows);const {data}=await s.call('snapshot');
+  assert.equal(data.result.counts.counted,1);assert.equal(data.result.counts.duplicate,1);assert.equal(data.result.rows[0].name,rows[0].name);
+  const changed=structuredClone(data.document);changed.data.snapshot.data.rows[0].name='Modified';
+  assert.equal((await s.call('verify',{document:changed})).data.error.code,'INVALID_SIGNATURE');
 });

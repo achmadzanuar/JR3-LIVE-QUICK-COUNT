@@ -4,6 +4,8 @@ PASS source snapshot shows five synthetic responses
 PASS unresolved response disables finalization
 PASS new snapshot has unsaved indicator
 PASS dark theme works
+PASS respondent name appears in private table
+PASS respondent name search works
 PASS status filter shows one review
 PASS address correction resolves review
 PASS history renders reason

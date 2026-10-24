@@ -22,7 +22,7 @@ function render(){
   const final=audit.type==='final',data=audit.data,source=data.snapshot.data;
   $('audit-content').hidden=false;$('document-status').textContent=final?'FINAL TERKUNCI':'DRAF · VERSI '+data.version;
   $('audit-heading').textContent=final?'Arsip hasil final':'Audit salinan sumber';
-  $('source-info').textContent='Diambil '+date(source.readAt)+' · Zona sumber '+source.timeZone+' · Audit '+data.id.slice(0,8)+(data.parent?' · Revisi final '+data.parent.id.slice(0,8):'');
+  $('source-info').textContent='Diambil '+date(source.readAt)+' · Zona sumber '+source.timeZone+' · Audit '+data.id.slice(0,8)+(data.parent?' · Revisi final '+data.parent.id.slice(0,8):'')+(source.rows.some(r=>!Object.hasOwn(r,'name'))?' · Salinan lama belum memuat nama responden. Simpan draf sebelum mengambil salinan sumber baru.':'');
   $('save-audit').disabled=false;$('save-audit').textContent=final?'Simpan Arsip Final':'Simpan Berkas Draf';
   $('finalize').hidden=final;$('finalize').disabled=result.counts.review>0;$('finalize').title=result.counts.review?'Masih ada '+result.counts.review+' respons perlu pemeriksaan':'';$('revise').hidden=!final;
   $('stats').replaceChildren(...[['total','Total respons'],...Object.entries(labels)].map(([status,label])=>{const card=el('div',undefined,'stat');card.dataset.status=status;card.append(el('span',label),el('strong',String(status==='total'?result.total:result.counts[status])));return card;}));
@@ -38,7 +38,7 @@ function render(){
 }
 function renderRows(){
   const q=$('search').value.trim().toLowerCase(),status=$('status-filter').value,block=$('block-filter').value,candidate=$('candidate-filter').value;
-  const rows=result.rows.filter(r=>(!q||[r.id,r.address,r.effectiveAddress,r.normalized?.key].join(' ').toLowerCase().includes(q))&&(!status||r.status===status)&&(!block||String(r.normalized?.block)===block)&&(!candidate||r.candidateId===candidate));
+  const rows=result.rows.filter(r=>(!q||[r.id,r.name,r.address,r.effectiveAddress,r.normalized?.key].join(' ').toLowerCase().includes(q))&&(!status||r.status===status)&&(!block||String(r.normalized?.block)===block)&&(!candidate||r.candidateId===candidate));
   const pages=Math.max(1,Math.ceil(rows.length/pageSize));page=Math.min(page,pages-1);
   $('visible-count').textContent=rows.length+' dari '+result.total+' respons';$('page-info').textContent='Halaman '+(page+1)+' / '+pages;$('previous-page').disabled=page===0;$('next-page').disabled=page===pages-1;
   $('response-rows').replaceChildren(...rows.slice(page*pageSize,(page+1)*pageSize).map(r=>{
@@ -47,11 +47,11 @@ function renderRows(){
     address.append(el('small',r.normalized?'Blok '+r.normalized.block+' · Rumah '+r.normalized.house:'Belum terpetakan'));if(r.reviewedAddress)address.append(el('small','Koreksi terdahulu: '+r.reviewedAddress));if(r.effectiveAddress!==r.address)address.append(el('small','Alamat efektif: '+r.effectiveAddress));
     if(!r.candidateId)choice.append(el('small',r.choice));state.append(el('span',labels[r.status],'status '+r.status),el('small',r.reason));
     if(audit.type==='draft'){const button=el('button','Tinjau','row-action');button.addEventListener('click',()=>openDecision(r));actions.append(button);}else actions.textContent='Terkunci';
-    tr.append(el('td','#'+r.id),time,address,choice,state,actions);return tr;
+    tr.append(el('td','#'+r.id),el('td',r.name?.trim()||'—','respondent-name'),time,address,choice,state,actions);return tr;
   }));
-  if(!rows.length){const td=el('td','Tidak ada respons sesuai filter.');td.colSpan=6;const tr=el('tr');tr.append(td);$('response-rows').append(tr);}
+  if(!rows.length){const td=el('td','Tidak ada respons sesuai filter.');td.colSpan=7;const tr=el('tr');tr.append(td);$('response-rows').append(tr);}
 }
-function openDecision(row){if(busy)return;selected=row;$('decision-id').textContent='#'+row.id;$('decision-context').textContent='Alamat asli: '+row.address+' · '+labels[row.status];$('decision-action').value='correct';$('address-field').hidden=false;$('decision-address').value=row.normalized?.key||row.effectiveAddress;$('decision-reason').value='';$('decision-dialog').showModal();}
+function openDecision(row){if(busy)return;selected=row;$('decision-id').textContent='#'+row.id;$('decision-context').textContent=(row.name?row.name+' · ':'')+'Alamat asli: '+row.address+' · '+labels[row.status];$('decision-action').value='correct';$('address-field').hidden=false;$('decision-address').value=row.normalized?.key||row.effectiveAddress;$('decision-reason').value='';$('decision-dialog').showModal();}
 function askPassword(title){return new Promise(resolve=>{const dialog=$('password-dialog');$('password-title').textContent=title;$('file-password').value='';dialog.showModal();let submitted=false;const submit=event=>{event.preventDefault();submitted=true;const password=$('file-password').value;$('file-password').value='';dialog.close();resolve(password);};const closed=()=>{dialog.removeEventListener('close',closed);$('password-form').removeEventListener('submit',submit);$('file-password').value='';if(!submitted)resolve(null);};$('password-form').addEventListener('submit',submit);dialog.addEventListener('close',closed);});}
 async function save(){
   const password=await askPassword('Password panitia untuk menyimpan berkas');if(password===null)return;
