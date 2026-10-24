@@ -33,8 +33,12 @@ export function createAnalysisHandler({env=process.env,source=createAuditSource(
         for(const [key,item]of attempts)if(now()-item.since>=900000)attempts.delete(key);
         const limit=attempts.get(ip)||{count:0,since:now()};
         if(limit.count>=5)throw new AuditError('RATE_LIMIT',429);
+        // Reserve a slot before asynchronous password hashing so concurrent
+        // requests cannot all pass the same unincremented counter.
+        limit.count++;
+        if(!attempts.has(ip)&&attempts.size>=1000)attempts.delete(attempts.keys().next().value);
+        attempts.set(ip,limit);
         if(!await checkPassword(body.password,config.hash)){
-          limit.count++;if(attempts.size>=1000)attempts.delete(attempts.keys().next().value);attempts.set(ip,limit);
           throw new AuditError('LOGIN_FAILED',401);
         }
         attempts.delete(ip);

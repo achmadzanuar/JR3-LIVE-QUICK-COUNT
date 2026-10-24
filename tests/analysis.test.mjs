@@ -91,6 +91,11 @@ test('snapshots cannot add rows or change choice/time/address; even decisions ar
   }
   assert.equal((await s.call('preview',{document:data.document})).data.result.total,3);assert.equal(s.reads,1);
 });
+test('parallel login attempts cannot bypass the per-process rate limit',async()=>{
+  const s=await setup();
+  const statuses=await Promise.all(Array.from({length:12},async()=> (await s.call('login',{password:'incorrect'})).response.status));
+  assert.equal(statuses.filter(s=>s===401).length,5);assert.equal(statuses.filter(s=>s===429).length,7);
+});
 test('review decisions record server time before/after, require reason, protect immutable fields',async()=>{
   const s=await setup();let {data}=await s.call('snapshot');
   assert.equal((await s.call('finalize',{document:data.document})).data.error.code,'UNRESOLVED');
