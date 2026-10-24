@@ -3,8 +3,20 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "public",
-  "functions": { "api/results.js": { "maxDuration": 30 } },
+  "functions": { "api/results.js": { "maxDuration": 30 }, "api/analysis.js": { "maxDuration": 30 } },
+  "rewrites": [
+    {"source":"/api/analysis/:action", "destination":"/api/analysis?action=:action"},
+    {"source":"/analisis", "destination":"/analisis/index.html"}
+  ],
   "headers": [
+    {
+      "source":"/analisis(.*)",
+      "headers":[
+        {"key":"Cache-Control","value":"no-store"},
+        {"key":"X-Robots-Tag","value":"noindex, nofollow"},
+        {"key":"Content-Security-Policy","value":"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'"}
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [

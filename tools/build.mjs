@@ -15,4 +15,8 @@ const app=fs.readFileSync(path.join(root,'public/app.js'),'utf8');
 if(app.includes('google.script')||app.includes('GOOGLE_SERVICE_ACCOUNT'))throw new Error('Server code leaked to public UI');
 new vm.Script(app);
 new vm.Script(fs.readFileSync(path.join(root,'public/theme.js'),'utf8'));
+for(const filename of ['audit.js','crypto.js']) {
+  const source=fs.readFileSync(path.join(root,'public/analisis',filename),'utf8');
+  if(source.includes('ANALYSIS_SIGNING_KEY')||source.includes('ANALYSIS_PASSWORD_HASH'))throw new Error('Audit secret in public assets');
+}
 console.log('Build verified: 7 real profiles, 7 posters, percentage-only chart.');
