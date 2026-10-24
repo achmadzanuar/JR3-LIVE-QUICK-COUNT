@@ -1,11 +1,26 @@
 PASS wrong password stays locked
 PASS login opens private workspace
-PASS source snapshot shows five synthetic responses
+PASS source snapshot shows 27 synthetic responses
 PASS unresolved response disables finalization
 PASS new snapshot has unsaved indicator
 PASS dark theme works
 PASS respondent name appears in private table
 PASS respondent name search works
+PASS comparison includes all three house responses despite duplicate filter
+PASS counted response remains visible as reference
+PASS selected duplicate is highlighted
+PASS name and candidate differences are informational
+PASS raw address variants and normalized equality shown
+PASS comparison time includes milliseconds
+PASS pagination fixture reaches second page
+PASS comparison retrieves counted reference from another page
+PASS exact timestamp tie explains source row order
+PASS closing panel returns keyboard focus to its trigger
+PASS house group button opens full comparison
+PASS rejecting earliest response updates counted reference
+PASS comparison retains rejected same-house response
+PASS address correction removes response from previous duplicate group
+PASS comparison shows original, corrected and normalized addresses separately
 PASS status filter shows one review
 PASS address correction resolves review
 PASS history renders reason
@@ -17,6 +32,7 @@ PASS draft import verifies server signature
 PASS final locked label
 PASS final response rows cannot edit
 PASS final encrypted download generated
+PASS final archive comparison is read-only
 PASS revision references final
 PASS revision re-enables review
 DONE: all UI checks passed

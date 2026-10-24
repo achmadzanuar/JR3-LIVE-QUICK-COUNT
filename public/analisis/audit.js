@@ -1,7 +1,9 @@
 import {encryptAudit,decryptAudit} from './crypto.js';
+import {buildDuplicateComparison,comparisonTime} from './comparison.js';
 const $=id=>document.getElementById(id);
 const labels={counted:'Dihitung',duplicate:'Duplikat',late:'Lewat waktu',review:'Perlu pemeriksaan',rejected:'Ditolak panitia'};
 let audit=null,result=null,profiles=[],dirty=false,busy=false,page=0,selected=null;
+let comparisonTrigger=null;
 const pageSize=25;
 const fmt=new Intl.DateTimeFormat('id-ID',{timeZone:'Asia/Jakarta',dateStyle:'medium',timeStyle:'medium'});
 const date=value=>value?fmt.format(new Date(value))+' WIB':'Tidak valid';
@@ -9,7 +11,7 @@ const percentage=value=>value.toLocaleString('id-ID',{maximumFractionDigits:2})+
 const el=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
 function notice(message){$('notice').textContent=message;$('notice').hidden=!message;}
 function setDirty(value){dirty=value;$('unsaved').hidden=!value;}
-function auth(yes){$('login-panel').hidden=yes;$('workspace').hidden=!yes;$('logout').hidden=!yes;}
+function auth(yes){if(!yes&&$('comparison-dialog').open)$('comparison-dialog').close();$('login-panel').hidden=yes;$('workspace').hidden=!yes;$('logout').hidden=!yes;}
 async function api(action,body={}){
   const response=await fetch('/api/analysis/'+action,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),cache:'no-store'});
   let data;try{data=await response.json();}catch{throw Error('Server belum dapat dijangkau. Draf di halaman tetap tersedia.');}
@@ -17,7 +19,7 @@ async function api(action,body={}){
   return data;
 }
 async function run(callback){if(busy)return;busy=true;document.body.setAttribute('aria-busy','true');notice('');try{await callback();}catch(e){notice(e.message);}finally{busy=false;document.body.removeAttribute('aria-busy');}}
-function accept(data,changed=true){audit=data.document;result=data.result;page=0;setDirty(changed);render();}
+function accept(data,changed=true){if($('comparison-dialog').open)$('comparison-dialog').close();audit=data.document;result=data.result;page=0;setDirty(changed);render();}
 function render(){
   const final=audit.type==='final',data=audit.data,source=data.snapshot.data;
   $('audit-content').hidden=false;$('document-status').textContent=final?'FINAL TERKUNCI':'DRAF · VERSI '+data.version;
@@ -31,7 +33,7 @@ function render(){
   $('block-filter').replaceChildren(new Option('Semua blok',''),...Array.from(new Set(result.rows.map(r=>r.normalized?.block).filter(Boolean))).sort((a,b)=>a-b).map(b=>new Option('Blok '+b,String(b))));$('block-filter').value=previousBlock;
   $('candidate-filter').replaceChildren(new Option('Semua calon',''),...profiles.map(c=>new Option(c.number+' · '+c.name,c.id)));$('candidate-filter').value=previousCandidate;
   renderRows();
-  $('duplicate-groups').replaceChildren(...result.duplicates.map(g=>{const group=el('div',undefined,'group');group.append(el('strong','Rumah '+g.house),el('div','Dihitung: respons #'+g.counted),el('span','Duplikat: '+g.responses.map(i=>'#'+i).join(', ')));return group;}));
+  $('duplicate-groups').replaceChildren(...result.duplicates.map(g=>{const group=el('div',undefined,'group');group.append(el('strong','Rumah '+g.house),el('div','Dihitung: respons #'+g.counted),el('span','Duplikat: '+g.responses.map(i=>'#'+i).join(', ')));const button=el('button','Bandingkan','row-action compare-button');button.setAttribute('aria-label','Bandingkan respons rumah '+g.house);button.addEventListener('click',()=>openComparison(g.responses[0],button));group.append(button);return group;}));
   if(!result.duplicates.length)$('duplicate-groups').append(el('p','Tidak ada kelompok duplikat.','muted'));
   $('history').replaceChildren(...data.history.slice().reverse().map(event=>{const item=el('details',undefined,'event');item.append(el('summary','#'+event.response+' · '+date(event.at)),el('p',event.reason));const describe=d=>d?d.action+(d.address?' → '+d.address:''):'Tanpa keputusan khusus';item.append(el('p','Sebelum: '+describe(event.before)+'\nSesudah: '+describe(event.after)+'\nAlamat sebelum: '+event.addressBefore+'\nAlamat sesudah: '+event.addressAfter),el('p',event.actor,'muted'));return item;}));
   if(!data.history.length)$('history').append(el('p','Belum ada keputusan tambahan. Koreksi terdahulu yang cocok dengan sumber sudah diterapkan.','muted'));
@@ -46,10 +48,39 @@ function renderRows(){
     if(!r.timestamp)time.append(el('small','Nilai sumber: '+String(r.rawTimestamp)));
     address.append(el('small',r.normalized?'Blok '+r.normalized.block+' · Rumah '+r.normalized.house:'Belum terpetakan'));if(r.reviewedAddress)address.append(el('small','Koreksi terdahulu: '+r.reviewedAddress));if(r.effectiveAddress!==r.address)address.append(el('small','Alamat efektif: '+r.effectiveAddress));
     if(!r.candidateId)choice.append(el('small',r.choice));state.append(el('span',labels[r.status],'status '+r.status),el('small',r.reason));
-    if(audit.type==='draft'){const button=el('button','Tinjau','row-action');button.addEventListener('click',()=>openDecision(r));actions.append(button);}else actions.textContent='Terkunci';
+    if(r.status==='duplicate'){const compare=el('button','Bandingkan','row-action compare-button');compare.setAttribute('aria-label','Bandingkan respons #'+r.id);compare.addEventListener('click',()=>openComparison(r.id,compare));actions.append(compare);}
+    if(audit.type==='draft'){const button=el('button','Tinjau','row-action review-button');button.addEventListener('click',()=>openDecision(r));actions.append(button);}else actions.append(el('small','Terkunci'));
     tr.append(el('td','#'+r.id),el('td',r.name?.trim()||'—','respondent-name'),time,address,choice,state,actions);return tr;
   }));
   if(!rows.length){const td=el('td','Tidak ada respons sesuai filter.');td.colSpan=7;const tr=el('tr');tr.append(td);$('response-rows').append(tr);}
+}
+function openComparison(responseId,trigger){
+  if(busy)return;
+  const comparison=buildDuplicateComparison(result,responseId);if(!comparison)return;
+  comparisonTrigger=trigger;
+  $('comparison-title').textContent='Blok '+comparison.house.block+' · Rumah '+comparison.house.house;
+  $('comparison-explanation').textContent=comparison.explanation;
+  const current=comparison.rows.find(item=>item.selected);
+  $('comparison-outcome').replaceChildren(el('span','Dihitung: #'+comparison.winner.id+' · 1 poin','status counted'),el('span',labels[current.row.status]+': #'+current.row.id+' · '+current.points+' poin','status '+current.row.status));
+  $('comparison-reference').textContent='Pembanding: respons #'+comparison.winner.id+' yang dihitung. Seluruh respons untuk rumah ini ditampilkan, terlepas dari filter dan halaman tabel.';
+  $('comparison-rows').replaceChildren(...comparison.rows.map(({row,points,selected,reason,nameMatch,choiceMatch})=>{
+    const tr=el('tr');tr.dataset.response=String(row.id);tr.className=selected?'comparison-selected':'';
+    const id=el('td','#'+row.id);if(selected)id.append(el('small','Sedang diperiksa','selected-label'));
+    const name=el('td',row.name?.trim()||'—','respondent-name');
+    const choice=el('td',profiles.find(p=>p.id===row.candidateId)?.name||row.choice||'Tidak dikenali');
+    if(row.id!==comparison.winner.id){
+      name.append(el('small',nameMatch==='unknown'?'Nama belum dapat dibandingkan':nameMatch==='same'?'Nama sama':'Nama berbeda','comparison-detail'));
+      choice.append(el('small',choiceMatch==='unknown'?'Pilihan belum dikenali':choiceMatch==='same'?'Pilihan sama':'Pilihan berbeda','comparison-detail'));
+    }else{name.append(el('small','Respons pembanding'));}
+    const corrected=audit.data.decisions[row.id]?.action==='correct'||!!row.reviewedAddress;
+    const correction=el('td',corrected?row.effectiveAddress:'—');
+    if(corrected)correction.append(el('small',audit.data.decisions[row.id]?.action==='correct'?'Koreksi pada audit ini':'Koreksi terdahulu'));
+    const normalized=el('td','Blok '+row.normalized.block+' · Rumah '+row.normalized.house,'comparison-house');normalized.append(el('small','Alamat rumah sama'));
+    const state=el('td');state.append(el('span',labels[row.status]+' · '+points+' poin','status '+row.status),el('small',reason));
+    const action=el('td');if(audit.type==='draft'){const review=el('button','Tinjau respons #'+row.id,'row-action');review.addEventListener('click',()=>{$('comparison-dialog').close();openDecision(row);});action.append(review);}else action.textContent='Arsip final · hanya baca';
+    tr.append(id,name,el('td',comparisonTime(row.timestamp),'comparison-time'),el('td',row.address),correction,normalized,choice,state,action);return tr;
+  }));
+  $('comparison-dialog').showModal();
 }
 function openDecision(row){if(busy)return;selected=row;$('decision-id').textContent='#'+row.id;$('decision-context').textContent=(row.name?row.name+' · ':'')+'Alamat asli: '+row.address+' · '+labels[row.status];$('decision-action').value='correct';$('address-field').hidden=false;$('decision-address').value=row.normalized?.key||row.effectiveAddress;$('decision-reason').value='';$('decision-dialog').showModal();}
 function askPassword(title){return new Promise(resolve=>{const dialog=$('password-dialog');$('password-title').textContent=title;$('file-password').value='';dialog.showModal();let submitted=false;const submit=event=>{event.preventDefault();submitted=true;const password=$('file-password').value;$('file-password').value='';dialog.close();resolve(password);};const closed=()=>{dialog.removeEventListener('close',closed);$('password-form').removeEventListener('submit',submit);$('file-password').value='';if(!submitted)resolve(null);};$('password-form').addEventListener('submit',submit);dialog.addEventListener('close',closed);});}
@@ -69,6 +100,8 @@ $('revise').addEventListener('click',()=>run(async()=>{if(!confirm('Buat draf ve
 $('decision-action').addEventListener('change',()=>{$('address-field').hidden=$('decision-action').value!=='correct';});
 $('decision-form').addEventListener('submit',event=>{event.preventDefault();run(async()=>{const change={id:selected.id,action:$('decision-action').value,address:$('decision-address').value,reason:$('decision-reason').value};const data=await api('decision',{document:audit,change});$('decision-dialog').close();accept(data);});});
 $('cancel-decision').addEventListener('click',()=>$('decision-dialog').close());$('cancel-password').addEventListener('click',()=>$('password-dialog').close());
+$('close-comparison').addEventListener('click',()=>$('comparison-dialog').close());
+$('comparison-dialog').addEventListener('close',()=>{if(!$('decision-dialog').open&&comparisonTrigger?.isConnected)comparisonTrigger.focus();});
 for(const id of ['search','status-filter','block-filter','candidate-filter'])$(id).addEventListener(id==='search'?'input':'change',()=>{page=0;if(result)renderRows();});
 $('previous-page').addEventListener('click',()=>{page--;renderRows();});$('next-page').addEventListener('click',()=>{page++;renderRows();});
 window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
